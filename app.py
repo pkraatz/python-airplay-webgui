@@ -44,5 +44,15 @@ def play():
 
     return redirect(url_for('index'))
 
+@app.route('/reconnect', methods=['POST'])
+def reconnect():
+    global atv
+
+    # Reset current connection an start a new one
+    atv = None
+
+    flash('Trying reconnect!')
+    return redirect(url_for('index'))
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=49913)

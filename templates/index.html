@@ -14,12 +14,16 @@
 </div>
 
 <div class="container">
-  <form method=post action="/play">
+  <form method="post" action="/play">
     <input type="text" class="form-control" name="videourl" placeholder="URL to video stream" value="{{ request.form.videourl }}">
     <input type="submit" class="btn btn-primary" name="action" value="Play">
     <input type="submit" class="btn btn-primary" name="action" value="Pause">
     <input type="submit" class="btn btn-primary" name="action" value="Resume">
     <input type="submit" class="btn btn-primary" name="action" value="Stop">
+  </form>
+  <br>
+  <form method="post" action="/reconnect">
+    <input type="submit" class="btn btn-danger" name="action" value="Reconnect">
   </form>
 </div>
 {% endblock %}
