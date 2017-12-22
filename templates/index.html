@@ -1,7 +1,25 @@
-<html>
-  <head>
-    <title>AirPlay Web</title>
-  </head>
-  <body>
-  </body>
-</html>
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <p class="lead">Get a stream URL. Or youtube URL.</p>
+    <ul class="">
+      <li><a href="https://mediathekviewweb.de/#query=!ARD%20%23Tatort" target="_blank">ARD Tatort</a></li>
+      <li><a href="https://mediathekviewweb.de/#query=!ARD" target="_blank">ARD alle</a></li>
+      <li><a href="https://mediathekviewweb.de/#query=!ZDF" target="_blank">ZDF alle</a></li>
+      <li><a href="https://mediathekviewweb.de/" target="_blank">Alle</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="container">
+  <form method=post action="/play">
+    <input type="text" class="form-control" name="videourl" placeholder="URL to video stream" value="{{ request.form.videourl }}">
+    <input type="submit" class="btn btn-primary" name="action" value="Play">
+    <input type="submit" class="btn btn-primary" name="action" value="Pause">
+    <input type="submit" class="btn btn-primary" name="action" value="Resume">
+    <input type="submit" class="btn btn-primary" name="action" value="Stop">
+  </form>
+</div>
+{% endblock %}
