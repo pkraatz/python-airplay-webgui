@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from airplay import AirPlay
-import os
+import os, ConfigParser
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
@@ -9,26 +9,44 @@ atv = None
 
 def atv_connect():
     global atv
-    atvIP = os.getenv("ATVIP")
 
     if atv:
         return
+
+    atvIP = Config().read("airplay", "device-ip")
+    print atvIP
 
     try:
         atv = AirPlay(atvIP)
     except Exception as e:
         print e
 
+class Config():
+    config = ConfigParser.RawConfigParser(allow_no_value=True)
+    config.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'airplay.cfg'))
+
+    def read(self, section, key):
+        return self.config.get(section, key)
+
+    def write(self, section, key, value):
+        self.config.set(section, key, value)
+
+        # Writing our configuration file
+        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'airplay.cfg'), 'wb') as configfile:
+            self.config.write(configfile)
+
+
 @app.route('/')
 def index():
     atv_connect()
-    global apInfo
-    apInfo = atv.server_info()
 
-    global apStatus
-    apStatus = atv.playback_info()
+    apStatus = "Disconnected"
+    deviceIp = Config().read('airplay', 'device-ip')
 
-    return render_template('index.html', ap_server_info=apInfo, ap_status=apStatus)
+    if atv:
+        apStatus = "Connected to " + atv.server_info().model
+
+    return render_template('index.html', ap_connection_status=apStatus, device_ip=deviceIp)
 
 @app.route('/action', methods=['POST'])
 def play():
@@ -57,7 +75,20 @@ def reconnect():
     # Reset current connection an start a new one
     atv = None
 
-    flash('Trying reconnect!')
+    flash('Trying to connect...')
+    return redirect(url_for('index'))
+
+@app.route('/saveIp', methods=['POST'])
+def saveIp():
+    global atv
+    deviceIp = request.form['device-ip']
+
+    # Reset current connection an start a new one
+    atv = None
+
+    Config().write('airplay', 'device-ip', deviceIp)
+
+    flash('IP saved.')
     return redirect(url_for('index'))
 
 if __name__ == "__main__":

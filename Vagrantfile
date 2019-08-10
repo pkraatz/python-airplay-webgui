@@ -68,6 +68,8 @@ Vagrant.configure("2") do |config|
     apt-get install -y python-dev python-pip
     pip install --upgrade pip
     pip install -r /vagrant/requirements.txt
-    python /vagrant/app.py
+    export SECRET_KEY=7g82f9g8h89g2f7638g32v2f8afvbnmlopä9p87o6i54usdfv
+    export ATVIP=192.168.178.52
+    python -u /vagrant/app.py >> /vagrant/app.log
   SHELL
 end
