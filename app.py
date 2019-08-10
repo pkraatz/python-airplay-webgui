@@ -22,9 +22,15 @@ def atv_connect():
 @app.route('/')
 def index():
     atv_connect()
-    return render_template('index.html')
+    global apInfo
+    apInfo = atv.server_info()
 
-@app.route('/play', methods=['POST'])
+    global apStatus
+    apStatus = atv.playback_info()
+
+    return render_template('index.html', ap_server_info=apInfo, ap_status=apStatus)
+
+@app.route('/action', methods=['POST'])
 def play():
     global atv
 

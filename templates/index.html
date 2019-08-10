@@ -14,8 +14,9 @@
 </div>
 
 <div class="container">
-  <form method="post" action="/play">
+  <form method="post" action="/action">
     <input type="text" class="form-control" name="videourl" placeholder="URL to video stream" value="{{ request.form.videourl }}">
+    <br>
     <input type="submit" class="btn btn-primary" name="action" value="Play">
     <input type="submit" class="btn btn-primary" name="action" value="Pause">
     <input type="submit" class="btn btn-primary" name="action" value="Resume">
