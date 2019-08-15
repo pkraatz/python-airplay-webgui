@@ -1,3 +1,4 @@
 Flask==0.12.2
+flask-socketio
 zeroconf <= 0.19.1
 https://github.com/pkraatz/python-airplay/archive/transcode.zip

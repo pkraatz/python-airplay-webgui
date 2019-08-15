@@ -1,11 +1,20 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
+from flask_socketio import SocketIO, emit
 from airplay import AirPlay
-import os, ConfigParser
+import os, ConfigParser, time
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
+socketio = SocketIO(app)
 
 atv = None
+
+
+@socketio.on('connect', namespace='/test')                          # Decorator to catch an event called "my event":
+def test_message():                        # test_message() is the event callback function.
+    print "Client connected!"
+    # emit('my response', {'data': 'got it!'})      # Trigger a new event called "my response"
+                                                  # that can be caught by another callback later in the program.
 
 def atv_connect():
     global atv
@@ -13,8 +22,11 @@ def atv_connect():
     if atv:
         return
 
+        time.sleep(500)
+
     atvIP = Config().read("airplay", "device-ip")
     print atvIP
+    socketio.emit('connected', {'data': atvIP}, namespace='/test')
 
     try:
         atv = AirPlay(atvIP)
@@ -92,4 +104,4 @@ def saveIp():
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=49913)
+    socketio.run(app, host="0.0.0.0", port=49913)
